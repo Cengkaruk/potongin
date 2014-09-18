@@ -2,6 +2,7 @@
 
 from flask import Blueprint
 from app.helpers.RestHelper import RestHelper
+from app.decorators.authdecorators import *
 
 #--------------------------------------
 # Setup for blueprints
@@ -9,8 +10,9 @@ from app.helpers.RestHelper import RestHelper
 apis = Blueprint('apis', __name__, url_prefix='/api')
 
 #--------------------------------------
-# Users methods
+# API
 #--------------------------------------
 @apis.route('/')
+@token_required('GET')
 def index():
   return RestHelper().build_response(200, 200, {}, 'Ready for resize, crop, and compress your image?')
