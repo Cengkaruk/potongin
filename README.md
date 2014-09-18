@@ -1,4 +1,4 @@
-potongin
+Potongin
 ========
 
-Image cropper and compressor
+Image resizer, cropper and compressor using ImageMagick
