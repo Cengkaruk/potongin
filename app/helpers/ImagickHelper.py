@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 # Taken from https://gist.github.com/yudanta/ba476ba184652afc077a
 
+import os
 from wand.image import Image
+from wand.color import Color
 
 #create class for get exif data from image
 class ExifData:
@@ -150,7 +152,7 @@ class ImageResizer:
 			#save 
 			square_image.save(filename=''.join([dest_path, size_name, '.jpg']))
 
-	def resize_image(self, img_path, size_config, size_name, dest_path):
+	def resize_image(self, img_path, size_config, size_name, dest_path, compress=False):
 		#open image
 		img = Image(filename=img_path)
 		#transform using resize config
@@ -168,8 +170,22 @@ class ImageResizer:
 			img.rotate(180) 
 			img.metadata['exif:Orientation'] = 1
 		'''
+
+		# Detect file extention
+		fileName, fileExtension = os.path.splitext(img_path)
+
 		#save img
-		img.save(filename=''.join([dest_path, size_name, '.jpg']))
+		fileName = ''.join([fileName, '_', size_name, fileExtension])
+		fileName = os.path.basename(fileName)
+		fileName = os.path.abspath(os.path.join(dest_path, fileName))
+
+		# Compress option?
+		if compress:
+			img.compression_quality = 70
+
+		img.save(filename=fileName)
+
+		return fileName
 
 	def generate_all_image(self, image_path, dest_path):
 		#generate square image
